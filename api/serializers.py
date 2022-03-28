@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Segment, Brand, Vehicle
 from django.contrib.auth.models import User
 
+
 # DBの内容をJSONに変換する際に、serializerが作用する
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+
 class SegmentSerializer(serializers.ModelSerializer):
     class Meta:
         # modelの割当
@@ -25,12 +27,14 @@ class SegmentSerializer(serializers.ModelSerializer):
         # serializerで取り扱う属性
         fields = ['id', 'segment_name']
 
+
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         # modelの割当
         model = Brand
         # serializerで取り扱う属性
         fields = ['id', 'brand_name']
+
 
 class VehicleSerializer(serializers.ModelSerializer):
     segment_name = serializers.ReadOnlyField(source='segment.segment_name', read_only=True)

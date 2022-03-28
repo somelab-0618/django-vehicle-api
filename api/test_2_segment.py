@@ -20,7 +20,7 @@ def detail_url(segment_id):
 
 
 # Token認証済のユーザーによるAPIアクセスのテスト
-class AutorizedSegmentApiTests(TestCase):
+class AuthorizedSegmentApiTests(TestCase):
     # テスト前の準備
     def setUp(self):
         # テスト用ユーザー作成
@@ -92,6 +92,7 @@ class AutorizedSegmentApiTests(TestCase):
         url = detail_url(segment.id)
         self.client.delete(url)
         self.assertEqual(0, Segment.objects.count())
+
 
 # Token未承認ユーザーでのAPIアクセスのテスト
 class UnauthorizedSegmentApiTests(TestCase):

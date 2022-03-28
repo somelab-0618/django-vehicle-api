@@ -18,8 +18,9 @@ def create_brand(brand_name):
 def detail_url(brand_id):
     return reverse('api:brand-detail', args=[brand_id])
 
+
 # Token認証済のユーザーによるAPIアクセスのテスト
-class AutorizedBrandApiTests(TestCase):
+class AuthorizedBrandApiTests(TestCase):
     # テスト前の準備
     def setUp(self):
         # テスト用ユーザー作成
@@ -90,6 +91,7 @@ class AutorizedBrandApiTests(TestCase):
         url = detail_url(segment.id)
         self.client.delete(url)
         self.assertEqual(0, Brand.objects.count())
+
 
 # Token未承認ユーザーでのAPIアクセスのテスト
 class UnauthorizedBrandApiTests(TestCase):

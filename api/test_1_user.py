@@ -52,6 +52,7 @@ class AuthorizerApiTests(TestCase):
         res = self.client.patch(PROFILE_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
 # 未認証ユーザーでのAPIアクセステスト
 class UnauthorizedUserApiTests(TestCase):
 
