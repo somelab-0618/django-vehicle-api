@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import authReducer from '../features/authSlice';
+import vehicleReducer from '../features/vehicleSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    // 'auth'はauthSliceのnameと一致していないといけない
+    auth: authReducer,
+    vehicle: vehicleReducer,
   },
 });
