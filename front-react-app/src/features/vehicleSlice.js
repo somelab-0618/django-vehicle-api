@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const apiUrl = 'http://localhost:8000/';
@@ -14,12 +14,12 @@ export const fetchAsyncGetSegments = createAsyncThunk('segment/get', async () =>
 });
 
 // Segment作成
-export const fetchAsyncCreateSegments = createAsyncThunk(
+export const fetchAsyncCreateSegment = createAsyncThunk(
   'segment/post',
   async (segment) => {
-    const res = await axios.post(`${apiUrl}api/segments/`, {
+    const res = await axios.post(`${apiUrl}api/segments/`, segment, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
@@ -28,12 +28,12 @@ export const fetchAsyncCreateSegments = createAsyncThunk(
 );
 
 // Segment更新
-export const fetchAsyncUpdateSegments = createAsyncThunk(
+export const fetchAsyncUpdateSegment = createAsyncThunk(
   'segment/put',
   async (segment) => {
-    const res = await axios.put(`${apiUrl}api/segments/${segment.id}`, segment, {
+    const res = await axios.put(`${apiUrl}api/segments/${segment.id}/`, segment, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
@@ -42,23 +42,22 @@ export const fetchAsyncUpdateSegments = createAsyncThunk(
 );
 
 // Segment削除
-export const fetchAsyncDeleteSegments = createAsyncThunk(
+export const fetchAsyncDeleteSegment = createAsyncThunk(
   'segment/delete',
   async (id) => {
-    await axios.delete(`${apiUrl}api/segments/${id}`, {
+    await axios.delete(`${apiUrl}api/segments/${id}/`, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
-
     return id;
   }
 );
 
 // Brand取得
 export const fetchAsyncGetBrands = createAsyncThunk('brand/get', async () => {
-  const res = await axios.get(`${apiUrl}api/brand/`, {
+  const res = await axios.get(`${apiUrl}api/brands/`, {
     headers: {
       Authorization: `token ${localStorage.token}`,
     },
@@ -70,9 +69,9 @@ export const fetchAsyncGetBrands = createAsyncThunk('brand/get', async () => {
 export const fetchAsyncCreateBrand = createAsyncThunk(
   'brand/post',
   async (brand) => {
-    const res = await axios.post(`${apiUrl}api/brand/`, {
+    const res = await axios.post(`${apiUrl}api/brands/`, brand, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
@@ -82,9 +81,9 @@ export const fetchAsyncCreateBrand = createAsyncThunk(
 
 // Brand更新
 export const fetchAsyncUpdateBrand = createAsyncThunk('brand/put', async (brand) => {
-  const res = await axios.put(`${apiUrl}api/brand/${brand.id}`, brand, {
+  const res = await axios.put(`${apiUrl}api/brands/${brand.id}/`, brand, {
     headers: {
-      'Content-type': 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `token ${localStorage.token}`,
     },
   });
@@ -93,13 +92,12 @@ export const fetchAsyncUpdateBrand = createAsyncThunk('brand/put', async (brand)
 
 // Brand削除
 export const fetchAsyncDeleteBrand = createAsyncThunk('brand/delete', async (id) => {
-  await axios.delete(`${apiUrl}api/brands/${id}`, {
+  await axios.delete(`${apiUrl}api/brands/${id}/`, {
     headers: {
-      'Content-type': 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `token ${localStorage.token}`,
     },
   });
-
   return id;
 });
 
@@ -117,9 +115,9 @@ export const fetchAsyncGetVehicles = createAsyncThunk('vehicle/get', async () =>
 export const fetchAsyncCreateVehicle = createAsyncThunk(
   'vehicle/post',
   async (vehicle) => {
-    const res = await axios.post(`${apiUrl}api/vehicle/`, {
+    const res = await axios.post(`${apiUrl}api/vehicles/`, vehicle, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
@@ -131,9 +129,9 @@ export const fetchAsyncCreateVehicle = createAsyncThunk(
 export const fetchAsyncUpdateVehicle = createAsyncThunk(
   'vehicle/put',
   async (vehicle) => {
-    const res = await axios.put(`${apiUrl}api/vehicle/${vehicle.id}`, vehicle, {
+    const res = await axios.put(`${apiUrl}api/vehicles/${vehicle.id}/`, vehicle, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
@@ -145,13 +143,12 @@ export const fetchAsyncUpdateVehicle = createAsyncThunk(
 export const fetchAsyncDeleteVehicle = createAsyncThunk(
   'vehicle/delete',
   async (id) => {
-    await axios.delete(`${apiUrl}api/vehicles/${id}`, {
+    await axios.delete(`${apiUrl}api/vehicles/${id}/`, {
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `token ${localStorage.token}`,
       },
     });
-
     return id;
   }
 );
@@ -206,101 +203,98 @@ export const vehicleSlice = createSlice({
   reducers: {
     // actonの定義
     editSegment(state, action) {
+      console.log(action.payload);
       state.editedSegment = action.payload;
     },
     editBrand(state, action) {
       state.editedBrand = action.payload;
     },
     editVehicle(state, action) {
-      state.editedBrand = action.payload;
+      state.editedVehicle = action.payload;
     },
-    // 非同期関数の後続処理
-    extraReducers: (builder) => {
-      // Segments
-      builder.addCase(fetchAsyncGetSegments.fulfilled, (state, action) => {
-        return {
-          ...state,
-          segments: action.payload,
-        };
-      });
-      builder.addCase(fetchAsyncCreateSegments.fulfilled, (state, action) => {
-        return {
-          ...state,
-          segments: [...state, action.payload],
-        };
-      });
-      builder.addCase(fetchAsyncUpdateSegments.fulfilled, (state, action) => {
-        return {
-          ...state,
-          segments: state.segments.map((seg) =>
-            seg.id === action.payload.id ? action.payload : seg
-          ),
-        };
-      });
-      builder.addCase(fetchAsyncDeleteSegments.fulfilled, (state, action) => {
-        return {
-          ...state,
-          segments: state.segments.filter((seg) => seg.id !== action.payload),
-          vehicles: state.vehicles.filter((veh) => veh.segment !== action.payload),
-        };
-      });
-      // Brands
-      builder.addCase(fetchAsyncGetBrands.fulfilled, (state, action) => {
-        return {
-          ...state,
-          brand: action.payload,
-        };
-      });
-      builder.addCase(fetchAsyncCreateBrand.fulfilled, (state, action) => {
-        return {
-          ...state,
-          brand: [...state, action.payload],
-        };
-      });
-      builder.addCase(fetchAsyncUpdateBrand.fulfilled, (state, action) => {
-        return {
-          ...state,
-          brand: state.brand.map((brand) =>
-            brand.id === action.payload.id ? action.payload : brand
-          ),
-        };
-      });
-      builder.addCase(fetchAsyncDeleteBrand.fulfilled, (state, action) => {
-        return {
-          ...state,
-          brand: state.brand.filter((brand) => brand.id !== action.payload),
-          vehicles: state.vehicles.filter((veh) => veh.brand !== action.payload),
-        };
-      });
-
-      // Vehicles
-      builder.addCase(fetchAsyncGetVehicles.fulfilled, (state, action) => {
-        return {
-          ...state,
-          vehicle: action.payload,
-        };
-      });
-      builder.addCase(fetchAsyncCreateVehicle.fulfilled, (state, action) => {
-        return {
-          ...state,
-          vehicle: [...state, action.payload],
-        };
-      });
-      builder.addCase(fetchAsyncUpdateVehicle.fulfilled, (state, action) => {
-        return {
-          ...state,
-          vehicle: state.vehicles.map((vehicle) =>
-            vehicle.id === action.payload.id ? action.payload : vehicle
-          ),
-        };
-      });
-      builder.addCase(fetchAsyncDeleteVehicle.fulfilled, (state, action) => {
-        return {
-          ...state,
-          vehicles: state.vehicles.filter((veh) => veh.vehicle !== action.payload),
-        };
-      });
-    },
+  },
+  // 非同期関数の後続処理
+  extraReducers: (builder) => {
+    builder.addCase(fetchAsyncGetSegments.fulfilled, (state, action) => {
+      return {
+        ...state,
+        segments: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncCreateSegment.fulfilled, (state, action) => {
+      return {
+        ...state,
+        segments: [...state.segments, action.payload],
+      };
+    });
+    builder.addCase(fetchAsyncUpdateSegment.fulfilled, (state, action) => {
+      return {
+        ...state,
+        segments: state.segments.map((seg) =>
+          seg.id === action.payload.id ? action.payload : seg
+        ),
+      };
+    });
+    builder.addCase(fetchAsyncDeleteSegment.fulfilled, (state, action) => {
+      return {
+        ...state,
+        segments: state.segments.filter((seg) => seg.id !== action.payload),
+        vehicles: state.vehicles.filter((veh) => veh.segment !== action.payload),
+      };
+    });
+    builder.addCase(fetchAsyncGetBrands.fulfilled, (state, action) => {
+      return {
+        ...state,
+        brands: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncCreateBrand.fulfilled, (state, action) => {
+      return {
+        ...state,
+        brands: [...state.brands, action.payload],
+      };
+    });
+    builder.addCase(fetchAsyncUpdateBrand.fulfilled, (state, action) => {
+      return {
+        ...state,
+        brands: state.brands.map((brand) =>
+          brand.id === action.payload.id ? action.payload : brand
+        ),
+      };
+    });
+    builder.addCase(fetchAsyncDeleteBrand.fulfilled, (state, action) => {
+      return {
+        ...state,
+        brands: state.brands.filter((brand) => brand.id !== action.payload),
+        vehicles: state.vehicles.filter((veh) => veh.brand !== action.payload),
+      };
+    });
+    builder.addCase(fetchAsyncGetVehicles.fulfilled, (state, action) => {
+      return {
+        ...state,
+        vehicles: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncCreateVehicle.fulfilled, (state, action) => {
+      return {
+        ...state,
+        vehicles: [...state.vehicles, action.payload],
+      };
+    });
+    builder.addCase(fetchAsyncUpdateVehicle.fulfilled, (state, action) => {
+      return {
+        ...state,
+        vehicles: state.vehicles.map((vehicle) =>
+          vehicle.id === action.payload.id ? action.payload : vehicle
+        ),
+      };
+    });
+    builder.addCase(fetchAsyncDeleteVehicle.fulfilled, (state, action) => {
+      return {
+        ...state,
+        vehicles: state.vehicles.filter((vehicle) => vehicle.id !== action.payload),
+      };
+    });
   },
 });
 
