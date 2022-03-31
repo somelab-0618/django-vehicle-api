@@ -11,16 +11,16 @@ import {
 } from '../features/vehicleSlice';
 import styles from './Segment.module.css';
 
-const initialSegment = {
-  id: 0,
-  segment_name: '',
-};
-
 const Segment = () => {
   const dispatch = useDispatch();
   const segments = useSelector(selectSegments);
   const editedSegment = useSelector(selectEditedSegment);
   const [successMsg, setSuccessMsg] = useState('');
+  const initialSegment = {
+    id: 0,
+    segment_name: '',
+  };
+
   useEffect(() => {
     const fetchBootLoader = async () => {
       const result = await dispatch(fetchAsyncGetSegments());
