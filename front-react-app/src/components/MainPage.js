@@ -1,7 +1,20 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 const MainPage = () => {
-  return <div>Welcome to MainPage</div>;
+  const history = useHistory();
+
+  const Logout = () => {
+    localStorage.removeItem('token');
+    history.push('/');
+  };
+  return (
+    <div>
+      <button data-testid='btn-logout' onClick={Logout}>
+        Logout
+      </button>
+    </div>
+  );
 };
 
 export default MainPage;
