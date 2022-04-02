@@ -63,7 +63,7 @@ const Auth = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type='submit'>{isLogin ? 'Login' : 'Resister'}</button>
+        <button type='submit'>{isLogin ? 'Login' : 'Register'}</button>
         <div>
           <FlipCamearaAndroidIcon
             data-testid='toggle-icon'
