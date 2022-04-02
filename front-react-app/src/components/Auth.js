@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Auth.module.css';
-import FlipCamearaAndroidIcon from '@material-ui/icons/FlipCameraAndroid';
+import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchAsyncLogin, fetchAsyncRegister } from '../features/authSlice';
@@ -65,7 +65,7 @@ const Auth = () => {
         </div>
         <button type='submit'>{isLogin ? 'Login' : 'Register'}</button>
         <div>
-          <FlipCamearaAndroidIcon
+          <FlipCameraAndroidIcon
             data-testid='toggle-icon'
             className={styles.auth__toggle}
             onClick={() => setIsLogin(!isLogin)}

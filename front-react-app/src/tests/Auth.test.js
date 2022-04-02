@@ -80,4 +80,16 @@ describe('Authコンポーネントテスト', () => {
     userEvent.click(screen.getByTestId('toggle-icon'));
     expect(screen.getByRole('button')).toHaveTextContent('Register');
   });
+  it('3: ログイン成功時はMainPageへ遷移する', async () => {
+    render(
+      <Provider store={store}>
+        <Auth />
+      </Provider>
+    );
+    // screen.debug();
+    userEvent.click(screen.getByText('Login'));
+    expect(await screen.findByText('ログインに成功しました。')).toBeInTheDocument();
+    expect(mockHistoryPush).toBeCalledWith('/vehicle');
+    expect(mockHistoryPush).toHaveBeenCalledTimes(1);
+  });
 });
