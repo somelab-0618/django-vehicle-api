@@ -69,6 +69,7 @@ describe('Authコンポーネントテスト', () => {
     expect(screen.getByRole('button')).toBeTruthy();
     expect(screen.getByTestId('toggle-icon')).toBeTruthy();
   });
+
   it('2: アイコンのクリックでボタンのテキストが切り替わる', async () => {
     render(
       <Provider store={store}>
@@ -80,6 +81,7 @@ describe('Authコンポーネントテスト', () => {
     userEvent.click(screen.getByTestId('toggle-icon'));
     expect(screen.getByRole('button')).toHaveTextContent('Register');
   });
+
   it('3: ログイン成功時はMainPageへ遷移する', async () => {
     render(
       <Provider store={store}>
@@ -91,5 +93,78 @@ describe('Authコンポーネントテスト', () => {
     expect(await screen.findByText('ログインに成功しました。')).toBeInTheDocument();
     expect(mockHistoryPush).toBeCalledWith('/vehicle');
     expect(mockHistoryPush).toHaveBeenCalledTimes(1);
+  });
+
+  it('4: ログイン失敗時は遷移しない', async () => {
+    // 失敗にステータス書き換え（このテストケースのみ有効）
+    server.use(
+      rest.post('http://localhost:8000/api/auth/', (req, res, ctx) => {
+        return res(ctx.status(400));
+      })
+    );
+    render(
+      <Provider store={store}>
+        <Auth />
+      </Provider>
+    );
+    // screen.debug();
+    userEvent.click(screen.getByText('Login'));
+    expect(await screen.findByText('ログインエラー！')).toBeInTheDocument();
+    expect(mockHistoryPush).toHaveBeenCalledTimes(0);
+  });
+
+  it('5: ユーザー登録成功時は成功メッセージが出力される', async () => {
+    render(
+      <Provider store={store}>
+        <Auth />
+      </Provider>
+    );
+    // screen.debug();
+    userEvent.click(screen.getByTestId('toggle-icon'));
+    expect(screen.getByRole('button')).toHaveTextContent('Register');
+    userEvent.click(screen.getByText('Register'));
+    expect(await screen.findByText('ログインに成功しました。')).toBeInTheDocument();
+    expect(mockHistoryPush).toBeCalledWith('/vehicle');
+    expect(mockHistoryPush).toHaveBeenCalledTimes(1);
+  });
+
+  it('6: ユーザー登録失敗時はエラーメッセージが出力される', async () => {
+    // 失敗にステータス書き換え（このテストケースのみ有効）
+    server.use(
+      rest.post('http://localhost:8000/api/create/', (req, res, ctx) => {
+        return res(ctx.status(400));
+      })
+    );
+    render(
+      <Provider store={store}>
+        <Auth />
+      </Provider>
+    );
+    // screen.debug();
+    userEvent.click(screen.getByTestId('toggle-icon'));
+    expect(screen.getByRole('button')).toHaveTextContent('Register');
+    userEvent.click(screen.getByText('Register'));
+    expect(await screen.findByText('ユーザー登録エラー')).toBeInTheDocument();
+    expect(mockHistoryPush).toHaveBeenCalledTimes(0);
+  });
+
+  it('7: ユーザー登録成功後、ログイン失敗時はエラーメッセージが出力される', async () => {
+    // 失敗にステータス書き換え（このテストケースのみ有効）
+    server.use(
+      rest.post('http://localhost:8000/api/auth/', (req, res, ctx) => {
+        return res(ctx.status(400));
+      })
+    );
+    render(
+      <Provider store={store}>
+        <Auth />
+      </Provider>
+    );
+    // screen.debug();
+    userEvent.click(screen.getByTestId('toggle-icon'));
+    expect(screen.getByRole('button')).toHaveTextContent('Register');
+    userEvent.click(screen.getByText('Register'));
+    expect(await screen.findByText('ログインエラー！')).toBeInTheDocument();
+    expect(mockHistoryPush).toHaveBeenCalledTimes(0);
   });
 });
