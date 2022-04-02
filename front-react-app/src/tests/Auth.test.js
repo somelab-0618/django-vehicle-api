@@ -9,7 +9,6 @@ import authReducer from '../features/authSlice';
 import Auth from '../components/Auth';
 
 const mockHistoryPush = jest.fn();
-
 // 関数をテスト用に上書き
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
@@ -148,7 +147,7 @@ describe('Authコンポーネントテスト', () => {
     expect(mockHistoryPush).toHaveBeenCalledTimes(0);
   });
 
-  it('7: ユーザー登録成功後、ログイン失敗時はエラーメッセージが出力される', async () => {
+  it(': ユーザー登録成功後、ログイン失敗時はエラーメッセージが出力される', async () => {
     // 失敗にステータス書き換え（このテストケースのみ有効）
     server.use(
       rest.post('http://localhost:8000/api/auth/', (req, res, ctx) => {
