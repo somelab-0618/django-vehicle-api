@@ -186,7 +186,7 @@ describe('Brandコンポーネントテスト', () => {
     expect(screen.getByTestId('list-1').textContent).toBe('update Toyota');
   });
 
-  it('7: ブランド（id:2）を更新すると、リストも更新される', async () => {
+  it('8: ブランド（id:2）を更新すると、リストも更新される', async () => {
     render(
       <Provider store={store}>
         <Brand />

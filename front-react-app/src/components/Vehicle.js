@@ -59,7 +59,7 @@ const Vehicle = () => {
       <div className={styles.vehicle__input}>
         <input
           type='text'
-          placeholder='new Vehicle name'
+          placeholder='new vehicle name'
           value={editedVehicle.vehicle_name}
           onChange={async (e) => {
             await dispatch(
@@ -148,20 +148,20 @@ const Vehicle = () => {
               </span>
               <div>
                 <button
-                  data-testid={`delete-vehicle-${vehicle.id}`}
+                  data-testid={`delete-veh-${vehicle.id}`}
                   onClick={async () => {
                     const result = await dispatch(
                       fetchAsyncDeleteVehicle(vehicle.id)
                     );
                     if (fetchAsyncDeleteVehicle.fulfilled.match(result)) {
-                      setSuccessMsg('brandを削除しました。');
+                      setSuccessMsg('vehicleを削除しました。');
                     }
                   }}
                 >
                   delete
                 </button>
                 <button
-                  data-testid={`edit-brand-${vehicle.id}`}
+                  data-testid={`edit-veh-${vehicle.id}`}
                   onClick={async () => {
                     await dispatch(editVehicle(vehicle));
                   }}
